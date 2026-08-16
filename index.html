@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
   <script>
+    //We create two const one for the max value and one for the min value, later whe use the getComputerChoice(1, 4) so it prints any number from 1 to 3
+    // We store the computer Choice is the const Choice for later use, we get the result by using MathFloor and them Math.Random to get the values within the min and max malues
     function getComputerChoice(min, max) {
       const minCeiled = Math.ceil(min);
       const maxFloored = Math.floor(max);
@@ -23,6 +25,8 @@
     }
 
     function getHumanChoice() {
+      // We use let cause the value of let can be changed later  not like const
+      //Put the Prompt inside of the Variable so it stores de question answer
       let HumanChoice = prompt("Choose Rock Paper or Scissors");
 
       if (HumanChoice === "Rock") {
@@ -37,6 +41,7 @@
     }
 
     function playGame() {
+      // set both scores to Zero so later in the PlayRound it can be changed when using the result and the ++.
       let humanScore = 0;
       let computerScore = 0;
 
@@ -55,7 +60,7 @@
           computerScore++;
         }
       }
-
+      //Play 5 rounds  and them print the result
       PlayRound(getHumanChoice(), getComputerChoice(1, 4));
       PlayRound(getHumanChoice(), getComputerChoice(1, 4));
       PlayRound(getHumanChoice(), getComputerChoice(1, 4));
