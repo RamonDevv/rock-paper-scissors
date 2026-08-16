@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <script>
+    function getComputerChoice(min, max) {
+      const minCeiled = Math.ceil(min);
+      const maxFloored = Math.floor(max);
+
+      const choice = Math.floor(
+        Math.random() * (maxFloored - minCeiled) + minCeiled,
+      );
+
+      let ComputerChoice = "";
+
+      if (choice === 1) {
+        ComputerChoice = "Rock";
+      } else if (choice === 2) {
+        ComputerChoice = "Paper";
+      } else if (choice === 3) {
+        ComputerChoice = "Scissors";
+      }
+
+      return ComputerChoice;
+    }
+
+    function getHumanChoice() {
+      let HumanChoice = prompt("Choose Rock Paper or Scissors");
+
+      if (HumanChoice === "Rock") {
+        HumanChoice = "Rock";
+      } else if (HumanChoice === "Paper") {
+        HumanChoice = "Paper";
+      } else if (HumanChoice === "Scissors") {
+        HumanChoice = "Scissors";
+      }
+
+      return HumanChoice;
+    }
+
+    function playGame() {
+      let humanScore = 0;
+      let computerScore = 0;
+
+      function PlayRound(humanChoice, ComputerChoice) {
+        if (humanChoice === "Rock" && ComputerChoice === "Scissors") {
+          humanScore++;
+        } else if (humanChoice === "Paper" && ComputerChoice === "Rock") {
+          humanScore++;
+        } else if (humanChoice === "Scissors" && ComputerChoice === "Paper") {
+          humanScore++;
+        } else if (ComputerChoice === "Rock" && humanChoice === "Scissors") {
+          computerScore++;
+        } else if (ComputerChoice === "Paper" && humanChoice === "Rock") {
+          computerScore++;
+        } else if (ComputerChoice === "Scissors" && humanChoice === "Paper") {
+          computerScore++;
+        }
+      }
+
+      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
+      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
+      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
+      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
+      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
+
+      console.log("Human Score:", humanScore);
+      console.log("Computer Score:", computerScore);
+    }
+
+    playGame();
+  </script>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock Paper Scissors</title>
+  </head>
+
+  <body></body>
+</html>
