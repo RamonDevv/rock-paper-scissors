@@ -1,84 +1,353 @@
 <!doctype html>
 <html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rock • Paper • Scissors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1026;
+      --panel: #1d1f3d;
+      --rock: #8b7355;
+      --paper: #f4f1ea;
+      --scissors: #ef476f;
+      --accent: #ffd93d;
+      --text-primary: #f7f7ff;
+      --text-secondary: #bfc0c0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #2b2d5a, var(--bg));
+      color: var(--text-primary);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    .title {
+      font-family: 'Bungee', cursive;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      letter-spacing: 0.2rem;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-shadow: 0 0.5rem 2rem rgba(255, 217, 61, 0.25);
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-secondary);
+      letter-spacing: 0.3rem;
+      text-transform: uppercase;
+    }
+
+    .scoreboard {
+      display: flex;
+      gap: clamp(1rem, 4vw, 3rem);
+      margin: 2rem 0;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      box-shadow: 0 2rem 4rem rgba(15, 16, 38, 0.45);
+    }
+
+    .score-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+
+    .score-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25rem;
+      color: var(--text-secondary);
+    }
+
+    .score-value {
+      font-family: 'Bungee', cursive;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      margin-top: 0.25rem;
+    }
+
+    .vs {
+      align-self: center;
+      font-family: 'Bungee', cursive;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--accent);
+    }
+
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(1rem, 4vw, 2rem);
+      margin: 2rem 0;
+    }
+
+    .choice-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: clamp(150px, 22vw, 220px);
+      height: clamp(150px, 22vw, 220px);
+      border-radius: 50%;
+      border: none;
+      font-family: 'Bungee', cursive;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.2rem;
+      cursor: pointer;
+      transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
+      color: var(--bg);
+    }
+
+    .choice-btn:disabled {
+      cursor: not-allowed;
+      filter: grayscale(0.6);
+      opacity: 0.4;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .choice-btn:not(:disabled):hover {
+      transform: translateY(-12px) scale(1.05);
+    }
+
+    .choice-btn:not(:disabled):active {
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .choice-btn.rock {
+      background: radial-gradient(circle, #b89b7a, var(--rock));
+      box-shadow: 0 2rem 4rem rgba(139, 115, 85, 0.4);
+    }
+
+    .choice-btn.paper {
+      background: radial-gradient(circle, #ffffff, var(--paper));
+      box-shadow: 0 2rem 4rem rgba(244, 241, 234, 0.25);
+    }
+
+    .choice-btn.scissors {
+      background: radial-gradient(circle, #ff7a9a, var(--scissors));
+      box-shadow: 0 2rem 4rem rgba(239, 71, 111, 0.35);
+      color: var(--text-primary);
+    }
+
+    .choice-btn .icon {
+      font-size: clamp(3rem, 8vw, 5rem);
+      margin-bottom: 0.5rem;
+    }
+
+    .results {
+      width: min(680px, 90vw);
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .result-card {
+      padding: 1rem 1.5rem;
+      background: rgba(29, 31, 61, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      box-shadow: 0 1.5rem 3rem rgba(15, 16, 38, 0.4);
+    }
+
+    .result-card.win {
+      border-color: rgba(6, 214, 160, 0.8);
+    }
+
+    .result-card.lose {
+      border-color: rgba(239, 71, 111, 0.8);
+    }
+
+    .result-card.tie {
+      border-color: rgba(191, 192, 192, 0.6);
+    }
+
+    .winner-banner {
+      margin-top: 1rem;
+      padding: 1rem 2rem;
+      font-family: 'Bungee', cursive;
+      font-size: clamp(1.5rem, 4vw, 2.75rem);
+      text-transform: uppercase;
+      letter-spacing: 0.4rem;
+      color: var(--accent);
+      text-shadow: 0 0 3rem rgba(255, 217, 61, 0.4);
+    }
+
+    @media (max-width: 640px) {
+      .scoreboard {
+        flex-direction: column;
+        border-radius: 24px;
+        gap: 1rem;
+      }
+
+      .vs {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1 class="title">Rock • Paper • Scissors</h1>
+    <p class="subtitle">First to 5 wins</p>
+  </header>
+
+  <section class="scoreboard">
+    <div class="score-card">
+      <span class="score-label">You</span>
+      <span class="score-value" id="human-score">0</span>
+    </div>
+    <span class="vs">VS</span>
+    <div class="score-card">
+      <span class="score-label">Computer</span>
+      <span class="score-value" id="computer-score">0</span>
+    </div>
+  </section>
+
+  <section class="choices">
+    <button class="choice-btn rock" id="rock">
+      <span class="icon">✊</span>
+      Rock
+    </button>
+    <button class="choice-btn paper" id="paper">
+      <span class="icon">✋</span>
+      Paper
+    </button>
+    <button class="choice-btn scissors" id="scissors">
+      <span class="icon">✌️</span>
+      Scissors
+    </button>
+  </section>
+
+  <section class="results" id="results"></section>
+  <div id="winner-banner" class="winner-banner" hidden></div>
+
   <script>
-    //We create two const one for the max value and one for the min value, later whe use the getComputerChoice(1, 4) so it prints any number from 1 to 3
-    // We store the computer Choice is the const Choice for later use, we get the result by using MathFloor and them Math.Random to get the values within the min and max malues
-    function getComputerChoice(min, max) {
-      const minCeiled = Math.ceil(min);
-      const maxFloored = Math.floor(max);
-
-      const choice = Math.floor(
-        Math.random() * (maxFloored - minCeiled) + minCeiled,
-      );
-
-      let ComputerChoice = "";
-
+    function getComputerChoice() {
+      const choice = Math.floor(Math.random() * 3) + 1;
       if (choice === 1) {
-        ComputerChoice = "Rock";
+        return "Rock";
       } else if (choice === 2) {
-        ComputerChoice = "Paper";
+        return "Paper";
       } else if (choice === 3) {
-        ComputerChoice = "Scissors";
+        return "Scissors";
       }
-
-      return ComputerChoice;
+      return "Rock";
     }
 
-    function getHumanChoice() {
-      // We use let cause the value of let can be changed later  not like const
-      //Put the Prompt inside of the Variable so it stores de question answer
-      let HumanChoice = prompt("Choose Rock Paper or Scissors");
+    let humanScore = 0;
+    let computerScore = 0;
+    const resultsDiv = document.querySelector("#results");
+    const humanScoreEl = document.querySelector("#human-score");
+    const computerScoreEl = document.querySelector("#computer-score");
+    const winnerBanner = document.querySelector("#winner-banner");
+    const rockBtn = document.querySelector("#rock");
+    const scissorsBtn = document.querySelector("#scissors");
+    const paperBtn = document.querySelector("#paper");
 
-      if (HumanChoice === "Rock") {
-        HumanChoice = "Rock";
-      } else if (HumanChoice === "Paper") {
-        HumanChoice = "Paper";
-      } else if (HumanChoice === "Scissors") {
-        HumanChoice = "Scissors";
-      }
-
-      return HumanChoice;
+    function updateScoreboard() {
+      humanScoreEl.textContent = humanScore;
+      computerScoreEl.textContent = computerScore;
     }
 
-    function playGame() {
-      // set both scores to Zero so later in the PlayRound it can be changed when using the result and the ++.
-      let humanScore = 0;
-      let computerScore = 0;
-
-      function PlayRound(humanChoice, ComputerChoice) {
-        if (humanChoice === "Rock" && ComputerChoice === "Scissors") {
-          humanScore++;
-        } else if (humanChoice === "Paper" && ComputerChoice === "Rock") {
-          humanScore++;
-        } else if (humanChoice === "Scissors" && ComputerChoice === "Paper") {
-          humanScore++;
-        } else if (ComputerChoice === "Rock" && humanChoice === "Scissors") {
-          computerScore++;
-        } else if (ComputerChoice === "Paper" && humanChoice === "Rock") {
-          computerScore++;
-        } else if (ComputerChoice === "Scissors" && humanChoice === "Paper") {
-          computerScore++;
-        }
-      }
-      //Play 5 rounds  and them print the result
-      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
-      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
-      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
-      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
-      PlayRound(getHumanChoice(), getComputerChoice(1, 4));
-
-      console.log("Human Score:", humanScore);
-      console.log("Computer Score:", computerScore);
+    function disableButtons() {
+      rockBtn.disabled = true;
+      scissorsBtn.disabled = true;
+      paperBtn.disabled = true;
     }
 
-    playGame();
+    function announceWinner() {
+      if (humanScore >= 5) {
+        winnerBanner.textContent = "You Win!";
+        winnerBanner.hidden = false;
+        disableButtons();
+      } else if (computerScore >= 5) {
+        winnerBanner.textContent = "Computer Wins!";
+        winnerBanner.hidden = false;
+        disableButtons();
+      }
+    }
+
+    function playRound(humanChoice) {
+      if (humanScore >= 5 || computerScore >= 5) {
+        return;
+      }
+
+      const computerChoice = getComputerChoice();
+      const roundResult = document.createElement("div");
+      roundResult.classList.add("result-card");
+
+      if (humanChoice === "Rock" && computerChoice === "Scissors") {
+        humanScore++;
+        roundResult.classList.add("win");
+        roundResult.textContent = `Round win — ${humanChoice} crushes ${computerChoice}.`;
+      } else if (humanChoice === "Paper" && computerChoice === "Rock") {
+        humanScore++;
+        roundResult.classList.add("win");
+        roundResult.textContent = `Round win — ${humanChoice} covers ${computerChoice}.`;
+      } else if (humanChoice === "Scissors" && computerChoice === "Paper") {
+        humanScore++;
+        roundResult.classList.add("win");
+        roundResult.textContent = `Round win — ${humanChoice} cut ${computerChoice}.`;
+      } else if (computerChoice === "Rock" && humanChoice === "Scissors") {
+        computerScore++;
+        roundResult.classList.add("lose");
+        roundResult.textContent = `Round loss — ${computerChoice} crushes ${humanChoice}.`;
+      } else if (computerChoice === "Paper" && humanChoice === "Rock") {
+        computerScore++;
+        roundResult.classList.add("lose");
+        roundResult.textContent = `Round loss — ${computerChoice} covers ${humanChoice}.`;
+      } else if (computerChoice === "Scissors" && humanChoice === "Paper") {
+        computerScore++;
+        roundResult.classList.add("lose");
+        roundResult.textContent = `Round loss — ${computerChoice} cut ${humanChoice}.`;
+      } else if (humanChoice === computerChoice) {
+        roundResult.classList.add("tie");
+        roundResult.textContent = `Draw — both chose ${humanChoice}.`;
+      }
+
+      resultsDiv.prepend(roundResult);
+      updateScoreboard();
+
+      if (humanScore >= 5 || computerScore >= 5) {
+        announceWinner();
+      }
+    }
+
+    rockBtn.addEventListener("click", () => playRound("Rock"));
+    scissorsBtn.addEventListener("click", () => playRound("Scissors"));
+    paperBtn.addEventListener("click", () => playRound("Paper"));
   </script>
+</body>
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rock Paper Scissors</title>
-  </head>
-
-  <body></body>
 </html>
